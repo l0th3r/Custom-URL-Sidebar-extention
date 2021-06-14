@@ -7,25 +7,48 @@ var validBtn = document.getElementById("validBtn");
 
 addDiv.style.display = "none";
 
+var urlList = [];
+var lastUrl = "";
+
+window.onload = function () {
+    chrome.storage.sync.get('custum_url_list', function (data) {
+        urlList = data.custum_url_list;
+        console.log(urlList);
+    });
+
+    chrome.storage.sync.get('last_url', function (data) {
+        lastUrl = data.last_url;
+        console.log(lastUrl);
+    });
+};
+
 function saveNewLink(nameStr, linkStr)
 {
-    
+    var newLink = 
+    {
+        "name": nameStr,
+        "link": linkStr
+    }
+    urlList.push(newLink);
+    localSave();
 }
 
-addBtn.addEventListener("click", function() {
-    if(addDiv.style.display == "none")
-    {
-        addBtn.innerHTML = "<i class='bi bi-caret-up-fill'></i> Add";
-        addDiv.style.display = "";
-    }
-    else
-    {
-        addBtn.innerHTML = "<i class='bi bi-plus-lg'></i> Add";
-        addDiv.style.display = "none";
-    }
-});
+function localSave()
+{
+    chrome.storage.sync.set(
+        {
+            'custum_url_list': urlList,
+            'last_url': lastUrl
+        },
+        function() {
+        if (chrome.runtime.error) {
+          console.log("Runtime error.");
+        }
+    });
+}
 
-validBtn.addEventListener("click", function() {
+validBtn.addEventListener("click", function()
+{
     var nameError = false;
     var linkError = false;
 
@@ -44,4 +67,18 @@ validBtn.addEventListener("click", function() {
 
     if(!nameError && !linkError)
         saveNewLink(newNameInput.value, newLinkInput.value);
+});
+
+addBtn.addEventListener("click", function()
+{
+    if(addDiv.style.display == "none")
+    {
+        addBtn.innerHTML = "<i class='bi bi-caret-up-fill'></i> Add";
+        addDiv.style.display = "";
+    }
+    else
+    {
+        addBtn.innerHTML = "<i class='bi bi-plus-lg'></i> Add";
+        addDiv.style.display = "none";
+    }
 });

@@ -1,0 +1,28 @@
+{
+   "background": {
+      "scripts": [ "background.js" ]
+   },
+   "description": "Custom URL Sidebar in Opera.",
+   "developer": {
+      "name": "L'other"
+   },
+   "icons": {
+      "128": "twitter128.png",
+      "16": "twitter16.png",
+      "48": "twitter48.png"
+   },
+   "key": "NULL",
+   "manifest_version": 2,
+   "name": "Custom URL Sidebar",
+   "permissions": [ "webRequest", "webRequestBlocking", "\u003Call_urls>" ],
+   "sidebar_action": {
+      "default_icon": {
+         "19": "twitter19.png",
+         "38": "twitter38.png"
+      },
+      "default_panel": "panel.html",
+      "default_title": "Custom URL Sidebar"
+   },
+   "update_url": "https://extension-updates.opera.com/api/omaha/update/",
+   "version": "1.0"
+}

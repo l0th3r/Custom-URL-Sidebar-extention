@@ -1,6 +1,8 @@
 const addDiv = document.getElementById("add_div");
+const bookBtn = document.getElementById("bookBtn");
 const addBtn = document.getElementById("addBtn");
 const frame = document.getElementById("frame");
+const load = document.getElementById("loading");
 const bookmarksList = document.getElementById("bookmarks_list");
 
 // search
@@ -13,15 +15,21 @@ const newLinkInput = document.getElementById("new_link_input");
 const validBtn = document.getElementById("validBtn");
 
 addDiv.style.display = "none";
+bookmarksList.style.display = "none";
 
 var urlList = [];
 var lastUrl = "";
 
-window.onload = async function () {
+frame.addEventListener("load", ()=>{
+    load.style.display = "none";
+});
+
+window.onload = function () {
+    searchInput.style.display = "none";
     loadData();
 };
 
-searchInput.addEventListener('input', ()=> setTarget(searchInput.value));
+searchInput.addEventListener('input', ()=> setTarget(`https://www.youtube.com/results?search_query=${searchInput.value}`));
 
 function clearList()
 {
@@ -116,7 +124,6 @@ function loadData()
 
     chrome.storage.sync.get('last_url', function (data) {
         lastUrl = data.last_url;
-        console.log(lastUrl);
         setTarget(lastUrl);
     });
 }
@@ -156,6 +163,34 @@ addBtn.addEventListener("click", function()
         displayAddLink(false);
 });
 
+bookBtn.addEventListener("click", function()
+{
+    if(bookmarksList.style.display == "none")
+    {
+        bookmarksList.style.display = "";
+        bookBtn.innerHTML = "<i class='bi bi-bookmark-dash'></i>";
+    }
+    else
+    {
+        bookmarksList.style.display = "none";
+        bookBtn.innerHTML = "<i class='bi bi-bookmark'></i>";
+    }
+});
+
+searchBtn.addEventListener("click", function()
+{
+    if(searchInput.style.display == "none")
+    {
+        searchBtn.innerHTML = '<i class="bi bi-caret-right-fill"></i>';
+        searchInput.style.display = "";
+    }
+    else
+    {
+        searchBtn.innerHTML = '<i class="bi bi-search">';
+        searchInput.style.display = "none";
+    }
+});
+
 function displayAddLink(bool)
 {
     if(bool)
@@ -176,3 +211,28 @@ function setTarget(url)
     lastUrl = url;
     localSave();
 }
+
+new MutationObserver(function(mutations) {
+    mutations.some(function(mutation) {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
+        console.log(mutation);
+        console.log('Old src: ', mutation.oldValue);
+        console.log('New src: ', mutation.target.src);
+        return true;
+      }
+  
+      return false;
+    });
+  }).observe(document.body, {
+    attributes: true,
+    attributeFilter: ['src'],
+    attributeOldValue: true,
+    characterData: false,
+    characterDataOldValue: false,
+    childList: false,
+    subtree: true
+  });
+  
+  setTimeout(function() {
+    frame.src = 'http://jsfiddle.net/';
+  }, 3000);

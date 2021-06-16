@@ -29,7 +29,7 @@ window.onload = function () {
     loadData();
 };
 
-searchInput.addEventListener('input', ()=> setTarget(`https://www.youtube.com/results?search_query=${searchInput.value}`));
+searchInput.addEventListener('input', ()=> setTarget(`${searchInput.value}`));
 
 function clearList()
 {
@@ -210,29 +210,5 @@ function setTarget(url)
     frame.src = url;
     lastUrl = url;
     localSave();
+    searchInput.value = "";
 }
-
-new MutationObserver(function(mutations) {
-    mutations.some(function(mutation) {
-      if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
-        console.log(mutation);
-        console.log('Old src: ', mutation.oldValue);
-        console.log('New src: ', mutation.target.src);
-        return true;
-      }
-  
-      return false;
-    });
-  }).observe(document.body, {
-    attributes: true,
-    attributeFilter: ['src'],
-    attributeOldValue: true,
-    characterData: false,
-    characterDataOldValue: false,
-    childList: false,
-    subtree: true
-  });
-  
-  setTimeout(function() {
-    frame.src = 'http://jsfiddle.net/';
-  }, 3000);
